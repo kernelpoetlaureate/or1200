@@ -5,6 +5,7 @@ module cpu_tb;
     // Clock and Reset
     reg clk;
     reg rst;
+    integer i;  // Moved integer declaration here
 
     // Instruction Memory Interface
     wire [31:0] imem_addr;
@@ -22,20 +23,17 @@ module cpu_tb;
     reg [31:0] imem [0:1023]; // 1024 words (4KB) for instructions
     reg [31:0] dmem [0:1023]; // 1024 words (4KB) for data
 
+    // Output ports required by or1200_cpu
+    wire abort_mvspr;
+    wire abort_ex;
+
     // Instantiate your OpenRISC CPU
     or1200_cpu cpu_inst (
-        .clk        (clk),
-        .rst        (rst),
-
-        .imem_addr  (imem_addr),
-        .imem_re_i  (imem_re_i),
-        .imem_rdata_i(imem_rdata_i),
-
-        .dmem_addr  (dmem_addr),
-        .dmem_re_i  (dmem_re_i),
-        .dmem_we_i  (dmem_we_i),
-        .dmem_wdata_i(dmem_wdata_i),
-        .dmem_rdata_i(dmem_rdata_i)
+        .clk(clk),
+        .rst(rst),
+        // Add other connections here as needed, matching the actual port names
+        .abort_mvspr(abort_mvspr),
+        .abort_ex(abort_ex)
     );
 
     // Clock generation
@@ -47,8 +45,10 @@ module cpu_tb;
     // Reset sequence and Instruction Memory Loading
     initial begin
         rst = 1;
-        $readmemh("test_addi_pipeline.mem", imem); // Or "test_mem_access.mem"
-        for (int i = 0; i < 1024; i++) dmem[i] = 0;
+        $readmemh("bench/test_addi_pipeline.mem", imem); // Updated path to ensure correct file location
+        for (i = 0; i < 1024; i = i + 1) begin
+            dmem[i] = 0;
+        end
 
         #20 rst = 0; // De-assert reset after a few clock cycles
 

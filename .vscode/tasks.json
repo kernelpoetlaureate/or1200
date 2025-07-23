@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Run Verilog Testbench",
+			"command": "iverilog",
+			"args": [
+				"-o",
+				"test_mov_eax_5.out",
+				"test_mov_eax_5.v",
+				"../rtl/verilog/or1200_cpu.v"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

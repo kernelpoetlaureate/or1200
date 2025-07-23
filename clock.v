@@ -1,4 +1,4 @@
-module clock_generator;
+module clock_generator ;
     reg clk;
 
     initial begin
